@@ -30,7 +30,7 @@ fun MyDialog(
                     fontSize = 32.sp
                 )
             },
-            onDismissRequest = { false },
+            onDismissRequest = { true },
             confirmButton = {
                 TextButton(onClick = onConfirm)
                 { Text(text = "Logout") }

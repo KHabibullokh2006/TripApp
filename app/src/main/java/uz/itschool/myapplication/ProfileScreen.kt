@@ -4,9 +4,11 @@ import android.os.Bundle
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 
@@ -28,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +44,11 @@ import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import uz.itschool.myapplication.ui.theme.MyApplicationTheme
 
@@ -60,10 +66,12 @@ class ProfileScreen : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     var checked by remember { mutableStateOf(true) }
+                    var openDialog = remember { mutableStateOf(false)  }
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(10.dp)
+                            .padding(10.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             modifier = Modifier.padding(15.dp),
@@ -186,7 +194,10 @@ class ProfileScreen : ComponentActivity() {
                         Card(
                             modifier = Modifier
                                 .padding(10.dp)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .clickable {
+                                    openDialog.value = true
+                                },
                             elevation = CardDefaults.cardElevation(8.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
@@ -205,11 +216,43 @@ class ProfileScreen : ComponentActivity() {
                             )
 
                         }
+
+                        if (openDialog.value){
+                            AlertDialog(
+                                title = {
+                                    Text(
+                                        text = "Logout",
+                                        textAlign = TextAlign.Center,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 32.sp
+                                    )
+                                },
+                                onDismissRequest = { true },
+                                confirmButton = {
+                                    TextButton(onClick = { openDialog.value = false })
+                                    { Text( text = "Logout", color = Color.Black) }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { openDialog.value = false })
+                                    { Text(text = "Cancel",Modifier.background(Color(255, 235, 59, 255)), color = Color.Black) }
+                                },
+                                text = {
+                                    Box {
+                                        Text(text = "Do you really want to logout from this account")
+                                    }
+                                }
+                            )
+                        }
+
+
                     }
                 }
             }
         }
     }
+
+    
+    
 }
 
 @Composable
